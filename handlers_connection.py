@@ -64,7 +64,7 @@ async def list_connections(ctx, params: NoParams) -> ActionResult:
     records = [ConnectionRecord(**c) for c in conns.values()]
     return ActionResult.ok(ConnectionList(connections=records, total=len(records)), summary=f"Found {len(records)} Later connections.")
 
-@chat.function("disconnect_later", "Disconnect a Later account and remove stored credentials.", action_type="destructive", chain_callable=False, event="later-connector.disconnect_later", effects=["delete:connection"], data_model=DeleteResult)
+@chat.function("disconnect_later", "Disconnect a Later account and remove stored credentials.", action_type="destructive", chain_callable=True, event="later-connector.disconnect_later", effects=["delete:connection"], data_model=DeleteResult)
 async def disconnect_later(ctx, params: ConnectionIdParams) -> ActionResult:
     conns = await ctx.store.get(CONNECTIONS_KEY) or {}
     cid = params.connection_id.strip() if params.connection_id else (await ctx.store.get(ACTIVE_KEY) or "")

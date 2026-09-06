@@ -62,7 +62,7 @@
       "name": "disconnect_later",
       "description": "Typed function declaration.\n\nThe platform reads ``chain_callable`` from the manifest to pick typed\ndispatch (direct ``app/func(args)`` call) vs. legacy ChatExtension\nLLM-router delegation. Defaults to ``True`` for ALL ``action_type``\nvalues since v4.2.10, so the platform can deterministically execute the\ntyped tool without giving the LLM a chance to summarise instead.\n\n``effects`` declares the *intended* side-effect surface\n(``[\"create:note\"]``, ``[\"delete:folder\"]``, …). **Reserved /\nadvisory:** the kernel does not currently consume it (no narrator /\naudit-ledger read today); it is retained as declared-intent metadata\nemitted into the manifest.\n\n``id_projection`` declares the Pydantic params field that carries the\nresolved target id when this tool runs as a downstream chain step.\nDefault empty — the platform falls back to a verb-prefix heuristic\n(``delete_note`` -> ``note_id``). Required for compound names where\nthe heuristic produces a wrong field (``delete_notes_from_folder``\nwould naively yield ``notes_from_folder_id`` instead of ``folder_id``).",
       "action_type": "destructive",
-      "chain_callable": false,
+      "chain_callable": true,
       "effects": [
         "delete:connection"
       ],
