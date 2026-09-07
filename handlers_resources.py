@@ -25,7 +25,7 @@ async def list_profiles(ctx, params: ListProfilesParams) -> ActionResult:
                 status=p.get("status", "active"),
                 raw=p
             ))
-        return ActionResult.ok(ProfileList(profiles=profiles, total=len(profiles)), summary=f"Found {len(profiles)} social profiles.")
+        return ActionResult.success(ProfileList(profiles=profiles, total=len(profiles)), summary=f"Found {len(profiles)} social profiles.")
     except Exception as e:
         return ActionResult.error(f"Error fetching profiles: {e}")
 
@@ -43,7 +43,7 @@ async def list_media(ctx, params: ListMediaParams) -> ActionResult:
                 media_type=m.get("media_type", "image"),
                 created_at=m.get("created_at")
             ))
-        return ActionResult.ok(MediaList(media=items, total=len(items)), summary=f"Found {len(items)} media assets.")
+        return ActionResult.success(MediaList(media=items, total=len(items)), summary=f"Found {len(items)} media assets.")
     except Exception as e:
         return ActionResult.error(f"Error fetching media: {e}")
 
@@ -62,7 +62,7 @@ async def list_posts(ctx, params: ListPostsParams) -> ActionResult:
                 scheduled_time=p.get("scheduled_time"),
                 media_ids=p.get("media_ids", [])
             ))
-        return ActionResult.ok(PostList(posts=posts, total=len(posts)), summary=f"Found {len(posts)} posts.")
+        return ActionResult.success(PostList(posts=posts, total=len(posts)), summary=f"Found {len(posts)} posts.")
     except Exception as e:
         return ActionResult.error(f"Error listing posts: {e}")
 
@@ -85,7 +85,7 @@ async def create_post(ctx, params: CreatePostParams) -> ActionResult:
             scheduled_time=params.scheduled_time,
             media_ids=params.media_ids
         )
-        return ActionResult.ok(rec, summary=f"Scheduled post {pid}.")
+        return ActionResult.success(rec, summary=f"Scheduled post {pid}.")
     except Exception as e:
         return ActionResult.error(f"Error creating post: {e}")
 
@@ -94,7 +94,7 @@ async def delete_post(ctx, params: DeletePostParams) -> ActionResult:
     client = await resolve_client(ctx, params.connection_id)
     try:
         await client.delete_post(params.post_id)
-        return ActionResult.ok(DeleteResult(success=True, message=f"Post {params.post_id} deleted."), summary=f"Deleted post {params.post_id}.")
+        return ActionResult.success(DeleteResult(success=True, message=f"Post {params.post_id} deleted."), summary=f"Deleted post {params.post_id}.")
     except Exception as e:
         return ActionResult.error(f"Error deleting post: {e}")
 
@@ -109,7 +109,7 @@ async def audit_social_health(ctx, params: ConnectionIdParams) -> ActionResult:
             recs.append("No active social profiles found in Later.")
         if not media:
             recs.append("Media library is empty; upload visual assets before scheduling.")
-        return ActionResult.ok(AuditHealthReport(
+        return ActionResult.success(AuditHealthReport(
             status="healthy" if profiles else "warning",
             total_profiles=len(profiles),
             media_items_count=len(media),

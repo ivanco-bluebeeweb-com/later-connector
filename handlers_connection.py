@@ -56,13 +56,13 @@ async def connect_later(ctx, params: ConnectParams) -> ActionResult:
     await ctx.store.set(ACTIVE_KEY, cid)
 
     rec = ConnectionRecord(**conns[cid])
-    return ActionResult.ok(rec, summary=f"Connected to Later ({lbl}).")
+    return ActionResult.success(rec, summary=f"Connected to Later ({lbl}).")
 
 @chat.function("list_connections", "List connected Later accounts.", action_type="read", chain_callable=True, event="later-connector.list_connections", effects=["read:connections"], data_model=ConnectionList)
 async def list_connections(ctx, params: NoParams) -> ActionResult:
     conns = await ctx.store.get(CONNECTIONS_KEY) or {}
     records = [ConnectionRecord(**c) for c in conns.values()]
-    return ActionResult.ok(ConnectionList(connections=records, total=len(records)), summary=f"Found {len(records)} Later connections.")
+    return ActionResult.success(ConnectionList(connections=records, total=len(records)), summary=f"Found {len(records)} Later connections.")
 
 @chat.function("disconnect_later", "Disconnect a Later account and remove stored credentials.", action_type="destructive", chain_callable=True, event="later-connector.disconnect_later", effects=["delete:connection"], data_model=DeleteResult)
 async def disconnect_later(ctx, params: ConnectionIdParams) -> ActionResult:
@@ -78,4 +78,4 @@ async def disconnect_later(ctx, params: ConnectionIdParams) -> ActionResult:
         new_active = next(iter(conns)) if conns else ""
         await ctx.store.set(ACTIVE_KEY, new_active)
 
-    return ActionResult.ok(DeleteResult(success=True, message=f"Disconnected Later connection {cid}."), summary=f"Disconnected Later account {cid}.")
+    return ActionResult.success(DeleteResult(success=True, message=f"Disconnected Later connection {cid}."), summary=f"Disconnected Later account {cid}.")
