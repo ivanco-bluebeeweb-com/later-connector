@@ -10,7 +10,7 @@ class NoParams(BaseModel):
 class ConnectParams(BaseModel):
     label: str = Field(default="", description="Friendly connection label, e.g. Later Main.")
     access_token: str = Field(description="Later OAuth 2.0 Access Token.")
-    base_url: str = Field(default="https://api.later.com/v1", description="Later API base URL.")
+    base_url: str = Field(default="https://app.later.com/api/v2", description="Later API base URL.")
 
 class ConnectionIdParams(BaseModel):
     connection_id: str = Field(default="", description="Connection identifier (empty uses active connection).")

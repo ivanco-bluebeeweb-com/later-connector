@@ -3,7 +3,7 @@ from __future__ import annotations
 import httpx
 from typing import Any, Optional
 
-DEFAULT_BASE = "https://api.later.com/v1"
+DEFAULT_BASE = "https://app.later.com/api/v2"
 
 class LaterClient:
     def __init__(self, access_token: str, base_url: str = ""):
@@ -19,7 +19,7 @@ class LaterClient:
     async def verify_auth(self) -> dict[str, Any]:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             try:
-                resp = await client.get(f"{self.base_url}/profiles", headers=self.headers)
+                resp = await client.get(f"{self.base_url}/users/me", headers=self.headers)
                 if resp.status_code in (200, 201):
                     return {"status": "ok", "data": resp.json()}
                 return {"status": "error", "error": f"HTTP {resp.status_code}: {resp.text}"}
@@ -28,7 +28,7 @@ class LaterClient:
 
     async def list_profiles(self) -> list[dict[str, Any]]:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
-            resp = await client.get(f"{self.base_url}/profiles", headers=self.headers)
+            resp = await client.get(f"{self.base_url}/users/me", headers=self.headers)
             resp.raise_for_status()
             data = resp.json()
             return data if isinstance(data, list) else data.get("profiles", [])
